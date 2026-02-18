@@ -10,7 +10,7 @@ from typing import Any, Awaitable, Callable
 
 from loguru import logger
 
-from nanobot.bus.events import InboundMessage, OutboundMessage
+from nanobot.bus.events import InboundMessage, MessageType, OutboundMessage
 from nanobot.bus.queue import MessageBus
 from nanobot.providers.base import LLMProvider
 from nanobot.agent.context import ContextBuilder
@@ -333,7 +333,7 @@ class AgentLoop:
         async def _bus_progress(content: str) -> None:
             await self.bus.publish_outbound(OutboundMessage(
                 channel=msg.channel, chat_id=msg.chat_id, content=content,
-                metadata=msg.metadata or {},
+                metadata=msg.metadata or {}, type=MessageType.PROGRESS,
             ))
 
         final_content, tools_used = await self._run_agent_loop(
